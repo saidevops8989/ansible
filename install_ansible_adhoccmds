@@ -87,6 +87,8 @@ RUNNING ADHOC COMMANDS
 
 #ansible localhost -m command  -a 'cat /etc/motd' -u devops
 
+#ansible servera.lab.example.com -m command -a 'systemctl status httpd'
+
 
 
 
