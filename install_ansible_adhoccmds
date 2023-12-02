@@ -1,0 +1,95 @@
+Install Ansible
+
+# sudo dnf install epel-release
+
+#sudo dnf install ansible
+
+#ansible --version
+
+#ansible -m setup localhost  - give all the system configuration
+
+#ansible all --list-hosts
+
+#mkdir ansible
+
+#cd ansible
+
+#vi inventory                             #### you use name inventory or hosts file#######
+serverC.example.com
+[webservers]
+serverX.example.com
+[dbservers]
+serverA.lab.example.com
+serverB.lab.example.com
+
+#ansible ungrouped --list-hosts -i inventory
+
+#ansible webservers --list-hosts -i inventory
+
+#ansible dbservers --list-hosts -i inventory
+
+#vi ansible.cfg
+
+[defaults]
+inventory = ./inventory
+remote_user = devopsuser
+ask_pass = false
+[privilege_escalation]
+become = true
+become_method = sudo
+become_user = root
+become_ask_pass = false
+
+#
+
+DIRECTIVEDESCRIPTION
+inventory Specifies the path to the inventory file.
+
+remote_user The name of the user to log in as on the managed hosts. If
+not specified, the current user's name is used.
+
+ask_pass  Whether or not to prompt for an SSH password. Can be
+false if using SSH public key authentication.
+
+become Whether to automatically switch user on the managed
+host (typically to root) after connecting. This can also be
+specified by a play.
+
+become_method  How to switch user (typically sudo, which is the default,
+but su is an option).
+
+become_user  The user to switch to on the managed host (typically
+root, which is the default).
+
+become_ask_pass Whether to prompt for a password for your
+become_method. Defaults to false
+#
+
+[root@serverY sudoers.d]# pwd
+/etc/sudoers.d
+[root@serverY sudoers.d]# cat sudoers 
+# password-less sudo for Ansible user
+devopsuser ALL=(ALL) NOPASSWD:ALL
+[root@serverY sudoers.d]# 
+
+
+RUNNING ADHOC COMMANDS
+
+#ansible all -m ping                       {keys should be copied to  server by this time}
+
+#ansible-doc ping
+
+#ansible localhost -m command -a 'id'
+
+#ansible all -m ping -i inventory 
+
+#ansible localhost -m copy -a 'content="Managed by Ansible\n" dest=/etc/motd' -u devops
+
+#ansible localhost -m command  -a 'cat /etc/motd' -u devops
+
+
+
+
+
+
+
