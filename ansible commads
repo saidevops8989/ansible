@@ -4,6 +4,10 @@
 
 #ansible-playbook va.yaml -C                              to do a dry drun
 
+
+#ansible-playbook  -i inventory  tt3.yaml --check --diff      #### to see what is the differences as well###
+
+
 #ansible all -m ping
 
 #ansible localhost -m command -a 'id'
