@@ -1,0 +1,157 @@
+####demo variables####
+[root@server]cat ansible.cfg 
+[defaults]
+host_key_checking = False
+
+[root@server]$ cat inventory 
+localhost ansible_connection=local nameserver_ip=8.8.8.8 snmp_port=160-161
+node01 ansible_host=node01 ansible_ssh_pass=caleston123
+node02 ansible_host=node02 ansible_ssh_pass=caleston123
+[web_nodes]
+node01
+node02
+
+[all:vars]
+app_list=['vim', 'sqlite', 'jq']
+user_details={'username': 'admin', 'password': 'secret_pass', 'email': 'admin@example.com'}
+
+####BEFORE VARIABLES  #####
+[root@server]$ cat playbook.yaml 
+---
+- name: 'Add nameserver in resolv.conf file on localhost'
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: 'Add nameserver in resolv.conf file'
+      lineinfile:
+        path: /tmp/resolv.conf
+        line: 'nameserver 8.8.8.8'
+
+#####AFTER VARIABLES ####
+[root@server] cat playbook.yaml 
+---
+- name: 'Add nameserver in resolv.conf file on localhost'
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: 'Add nameserver in resolv.conf file'
+      lineinfile:
+        path: /tmp/resolv.conf
+        line: 'nameserver {{  nameserver_ip  }}'
+
+###################################
+######Before variables############
+[root@server]cat playbook.yaml 
+---
+- name: 'Add nameserver in resolv.conf file on localhost'
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: 'Add nameserver in resolv.conf file'
+      lineinfile:
+        path: /tmp/resolv.conf
+        line: 'nameserver {{  nameserver_ip  }}'
+    - name: 'Disable SNMP Port'
+      firewalld:
+        port: '160-161'
+        permanent: true
+        state: disabled 
+
+####After variables ########
+[root@server]cat playbook.yaml 
+---
+- name: 'Add nameserver in resolv.conf file on localhost'
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: 'Add nameserver in resolv.conf file'
+      lineinfile:
+        path: /tmp/resolv.conf
+        line: 'nameserver {{  nameserver_ip  }}'
+    - name: 'Disable SNMP Port'
+      firewalld:
+        port: '{{ snmp_port }}'
+        permanent: true
+        state: disabled
+##############################
+########BEFORE VARIABLE#######
+
+#####IN PLAY BOOK VARIABLES######
+[root@server] cat play2.yaml
+---
+- hosts: localhost
+  tasks:
+    - command: 'echo "My car is BMW M3"'
+    - command: 'echo "I live in the USA"'
+    - command: 'echo "I work as a Systems Engineer"'
+####After variables ######
+[root@server] cat play2.yaml
+---
+- hosts: localhost
+  vars:
+    car_model: 'BMW M3'
+    country_name: USA
+    title: 'Systems Engineer'
+  tasks:
+    - command: 'echo "My car is {{ car_model }}"'
+    - command: 'echo "I live in the {{ country_name }}"'
+    - command: 'echo "I work as a {{ title }}"'
+
+#####REAL EXAMPLE BEFORE VARIABLE######
+[root@server] cat play3.yaml
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install applications
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - vim
+        - sqlite
+        - jq
+
+######AFTER VARIABLE EXAMPLE#########
+[root@server] cat play3.yaml
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install applications
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - "{{ app_list }}"
+####ansible-playbook -i inventory play3.yaml####
+
+#####OTHER REAL EXAMPLE ON VARIABLE#########
+#####BEFORE VARIABLE ######################
+
+[root@server]cat user_setup.yaml 
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Set up user
+      user:
+        name: "admin"
+        password: "secret_pass"
+        comment: "admin@example.com"
+        state: present
+
+#######AFTER VARIABLE#############
+[root@server]cat user_setup.yaml
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Set up user
+      user:
+        name: "{{ user_details.username }}"
+        password: "{{ user_details.password }}"
+        comment: "{{ user_details.email }}"
+        state: present
+
+####END OF VARIABLES#####
