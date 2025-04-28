@@ -8,3 +8,31 @@
         path: /tmp/users.txt
         line: This line was added by the lineinfile module.
         state: present
+
+
+
+############
+- hosts: all
+  become: yes
+  tasks:
+    - name: Create directory for postgresql.conf
+      file:
+        path: /etc/postgresql/12/main
+        state: directory
+
+    - name: Create postgresql.conf if it doesn't exist
+      file:
+        path: /etc/postgresql/12/main/postgresql.conf
+        state: touch
+
+    - name: Set max connections
+      lineinfile:
+        path: /etc/postgresql/12/main/postgresql.conf
+        line: 'max_connections = 500'
+        create: yes
+
+    - name: Set listen addresses
+      lineinfile:
+        path: /etc/postgresql/12/main/postgresql.conf
+        line: 'listen_addresses = "*"'
+        create: yes
