@@ -12,6 +12,23 @@
      - command: 'echo "{{ item }}"'
        with_items: '{{ fruits }}'
 
+####loops real example that we use in day to day###
+
+---
+- name: 'Install required packages'
+  hosts: localhost
+  become: yes
+  vars:
+    packages:
+      - httpd
+      - make
+      - vim
+  tasks:
+    - yum:
+        name: '{{ item }}'
+        state: present
+      with_items: '{{ packages }}'
+#####################################################
 
 ###loops real example that we use in day to day####
 
