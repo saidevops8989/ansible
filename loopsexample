@@ -1,3 +1,20 @@
+####loops basic example ###
+---
+-  name: 'Print list of fruits'
+   hosts: localhost
+   vars:
+     fruits:
+       - Apple
+       - Banana
+       - Grapes
+       - Orange
+   tasks:
+     - command: 'echo "{{ item }}"'
+       with_items: '{{ fruits }}'
+
+
+###loops real example that we use in day to day####
+
 ---
 - name: MariaDB server is running
   hosts: all
