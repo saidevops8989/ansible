@@ -1,0 +1,43 @@
+####demo to see handler####
+###for this to work we need to have files dir and file1.conf and file2.conf should exist########
+---
+- name: Test Handler Execution
+  hosts: localhost
+  tasks:
+    - name: Copy file1.conf
+      copy:
+        src: files/file1.conf
+        dest: /tmp/file1.conf
+      notify: Sample Handler
+
+    - name: Copy file2.conf
+      copy:
+        src: files/file2.conf
+        dest: /tmp/file2.conf
+      notify: Sample Handler
+
+  handlers:
+    - name: Sample Handler
+      debug:
+        msg: "Handler has been triggered!"
+
+###################################
+#### demo to copy some source file and handler handel the restart##############
+---
+- name: Update web server configuration
+  hosts: webservers
+  tasks:
+    - name: Copy web server configuration file
+      copy:
+        src: /path/to/webserver.conf
+        dest: /etc/webserver/webserver.conf
+      notify: Restart web server
+
+  handlers:
+    - name: Restart web server
+      service:
+        name: webserver
+        state: restarted
+#####################################
+
+
