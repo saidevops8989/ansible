@@ -90,6 +90,15 @@ RUNNING ADHOC COMMANDS
 #ansible servera.lab.example.com -m command -a 'systemctl status httpd'
 
 
+####same adhoc cmd in playbook####
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: 'Execute a date command'
+      command: date       
+
+
 
 
 
