@@ -1,0 +1,21 @@
+###demo to see when conditon###
+###before ######
+
+---
+-  name: 'Execute a script on all web server nodes'
+   hosts: all
+   become: yes
+   tasks:
+     -  service: 'name=nginx state=started'
+
+ ####After  when conditon is applied that it run when host is node02###
+####After###
+---
+-  name: 'Execute a script on all web server nodes'
+   hosts: all
+   become: yes
+   tasks:
+     -  service: 'name=nginx state=started'
+        when: 'ansible_host=="node02"'
+
+  
