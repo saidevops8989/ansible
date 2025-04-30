@@ -96,7 +96,17 @@ RUNNING ADHOC COMMANDS
   become: yes
   tasks:
     - name: 'Execute a date command'
-      command: date       
+      command: date    
+####other example####
+---
+- name: 'Execute two commands on node01'
+  hosts: node01
+  become: yes
+  tasks:
+    - name: 'Execute a date command'
+      command: date
+    - name: 'Task to display hosts file on node01'
+      command: 'cat /etc/hosts'
 
 
 
