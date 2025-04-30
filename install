@@ -1,0 +1,36 @@
+####
+- hosts: all
+  tasks:
+    - name: Install a new package
+      apt:
+        name: new_package
+        state: present
+
+    - name: Update the service
+      service:
+        name: my_service
+        state: restarted
+
+    - name: Check service status
+      service:
+        name: my_service
+        state: started
+  ####demo example for any service ###
+- hosts: all
+  tasks:
+    - name: Install a new package
+      apt:
+        name: new_package
+        state: present
+
+    - name: Update the service
+      service:
+        name: my_service
+        state: restarted
+
+    - name: Check service status
+      service:
+        name: my_service
+        state: started
+
+        
