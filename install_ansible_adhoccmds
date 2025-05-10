@@ -40,7 +40,11 @@ become_method = sudo
 become_user = root
 become_ask_pass = false
 
-#
+# vi /etc/hosts  ----- To byepass dns issue
+Add ip addr of the server $ the hostname e.g 192.168.183.133 client.example.com
+
+# To ping the server to be config by ansible server
+ ping server hostname e.g ping client.example.com
 
 DIRECTIVEDESCRIPTION
 inventory Specifies the path to the inventory file.
